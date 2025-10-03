@@ -144,13 +144,28 @@ Springboot_api_demo/
   → パスの打ち間違い。`/hello`, `/messages` を確認
 
 ---
+## 今後の拡張（Roadmap）
 
-## 今後の拡張
+### Step 1: メッセージ機能の完成
 
-* PUT /messages/{id}, DELETE /messages/{id} の追加で CRUD 完成
-* バリデーション（入力チェック）
-* Docker 化（PostgreSQL + アプリ一括起動）
-* フロントエンドと連携（CORS設定）
+* `PUT /messages/{id}`（更新）/ `DELETE /messages/{id}`（削除）で CRUD を完成
+* Next.js フロントエンドと連携
+
+  * 入力フォームからメッセージを `POST` → API に送信
+  * DB（PostgreSQL）に保存
+  * 一覧をフロントで表示
+
+---
+
+### Step 2: メモ帳アプリ（Note API）
+
+* エンティティ: `Note(id, title, content, createdAt, updatedAt)`
+* API: `GET /notes`, `POST /notes`, `PUT /notes/{id}`, `DELETE /notes/{id}`
+
+  * ページング対応で一覧取得
+  * タイトルは任意、本文は必須
+* Next.js フロントからフォーム投稿 → 一覧表示・編集・削除が可能
+* DB に永続化（再起動してもデータが残る）
 
 ---
 
