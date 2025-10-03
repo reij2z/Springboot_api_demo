@@ -1,59 +1,78 @@
 # Spring Boot API Demo
 
-簡単な REST API（GET/POST）を Spring Boot 3 で実装したデモです。
+簡単な **REST API（GET/POST）** を Spring Boot 3 + PostgreSQL で実装したデモです。  
+最小構成から DB 永続化まで対応しています。
+
+---
 
 ## 特長
 
-* Java 17 / Spring Boot 3.x（組み込み Tomcat）
-* JSON レスポンス（単一/配列）
-* POST で JSON ボディを受け取りメモリに保存
-* 最小構成（DBなし）→ 今後 H2 / JPA に拡張予定
+- Java 17+ / Spring Boot 3.x
+- PostgreSQL 18 (JPA / Hibernate 使用)
+- JSON レスポンス（単一 / 配列）
+- POST で JSON を受け取り DB に保存
+- CRUD 拡張のベースに利用可能
+
+---
 
 ## 動作環境
 
-* Java **17 以上**
-* Git / PowerShell or ターミナル
-* （推奨）VS Code または IntelliJ IDEA
+- Java **17 以上**
+- PostgreSQL **18** （port=5432, DB名=demo, ユーザ=reiji）
+- Git / PowerShell or ターミナル
+- （推奨）VS Code または IntelliJ IDEA
+
+---
 
 ## セットアップ & 起動
 
-### 1) 取得
+### 1) ソース取得
 
 ```bash
 git clone https://github.com/reij2z/Springboot_api_demo.git
 cd Springboot_api_demo
+````
+
+### 2) DB準備
+
+PostgreSQL に demo DB を作成:
+
+```sql
+CREATE DATABASE demo;
+\c demo;
 ```
 
-### 2) 起動
+起動時に `messages` テーブルが自動生成されます。
 
-* **Windows (PowerShell)**
+### 3) アプリ起動
 
-  ```powershell
-  .\mvnw.cmd spring-boot:run
-  ```
-* **macOS / Linux**
+#### Windows (PowerShell)
 
-  ```bash
-  ./mvnw spring-boot:run
-  ```
+```powershell
+.\mvnw.cmd spring-boot:run
+```
 
-起動ログに `Tomcat started on port 8080` が出れば OK。
+#### macOS / Linux
+
+```bash
+./mvnw spring-boot:run
+```
+
+起動ログに `Tomcat started on port 8080` が出れば成功。
 停止は `Ctrl + C`。
 
-> ポート変更したい場合：`src/main/resources/application.properties` に
-> `server.port=8081` を追加。
+---
 
 ## エンドポイント
 
-### 1) 動作確認
+### 1. 動作確認
 
 * `GET /`
-  レスポンス（例）：`"UP! Try GET /hello or /messages"`
+  レスポンス例: `"UP! Try GET /hello or /messages"`
 
-### 2) 単一メッセージ（クエリで名前可変）
+### 2. 単一メッセージ
 
 * `GET /hello?name=Reiji`
-  レスポンス：
 
   ```json
   { "message": "こんにちは、Reiji！" }
@@ -65,53 +84,33 @@ cd Springboot_api_demo
   { "message": "こんにちは、World！" }
   ```
 
-### 3) メッセージ一覧（配列）
+### 3. メッセージ一覧（DBから取得）
 
 * `GET /messages`
-  レスポンス（例）：
 
   ```json
   [
-    {"id":"1","message":"こんにちは！"},
-    {"id":"2","message":"Spring Boot 勉強中です"},
-    {"id":"3","message":"APIから返ってきました！"}
+    {"id":1,"message":"こんにちは！"},
+    {"id":2,"message":"Spring Boot 勉強中です"}
   ]
   ```
 
-### 4) メッセージ追加（POST）
+### 4. メッセージ追加（DBに保存）
 
 * `POST /messages`
-  Header: `Content-Type: application/json`
   Body:
 
   ```json
   { "message": "Postmanからのテスト" }
   ```
 
-  レスポンス（例）：
+  レスポンス例:
 
   ```json
-  { "id":"4","message":"Postmanからのテスト" }
+  { "id":3,"message":"Postmanからのテスト" }
   ```
 
-#### curl 例（Windows PowerShell）
-
-```powershell
-curl -s -H "Content-Type: application/json" ^
-  -d "{\"message\":\"POSTテスト\"}" ^
-  http://localhost:8080/messages
-```
-
-#### Postman 例
-
-* Method: `POST`
-* URL: `http://localhost:8080/messages`
-* Body: `raw` / `JSON`
-* JSON:
-
-  ```json
-  { "message": "Postmanからのテスト" }
-  ```
+---
 
 ## プロジェクト構成
 
@@ -123,39 +122,41 @@ Springboot_api_demo/
    └─ main/
       ├─ java/com/example/demo/
       │  ├─ DemoApplication.java
-      │  └─ HelloController.java
+      │  ├─ HelloController.java
+      │  ├─ Message.java              # Entity
+      │  ├─ MessageRepository.java    # Repository
+      │  └─ MessageController.java    # REST Controller
       └─ resources/
-         └─ application.properties  # 任意（ポート等の設定）
+         └─ application.properties    # DB接続設定
 ```
 
-## 開発メモ
-
-* 受け取った JSON は メモリ上のリスト に保存しています（サーバ再起動で初期化）
-* コンソールログに POST の追加内容を出力（デバッグ用）
+---
 
 ## よくあるエラーと対処
 
-* **404 Not Found**: パスの打ち間違い or 再起動忘れ（`/hello`, `/messages` を確認）
-* **ポート競合**: `application.properties` に `server.port=8081`
+* **Failed to determine a suitable driver class**
+  → `spring.datasource.url`, `username`, `password` の設定忘れ
 
-## ビルド（JAR 実行）
+* **relation "messages" does not exist**
+  → 初回起動で Hibernate が自動生成するため、DB 準備を確認
 
-```bash
-# Windows PowerShell
-.\mvnw.cmd clean package
-java -jar target\demo-0.0.1-SNAPSHOT.jar
-```
+* **404 Not Found**
+  → パスの打ち間違い。`/hello`, `/messages` を確認
 
-## 今後の拡張（Roadmap）
+---
 
-* H2 / Spring Data JPA による 永続化（再起動してもデータ維持）
-* PUT /messages/{id}（更新）/ DELETE /messages/{id}（削除）で CRUD 完成
-* バリデーション（`spring-boot-starter-validation`）/ 例外ハンドラ整備
-* CORS 設定（フロントエンド連携用）
+## 今後の拡張
+
+* PUT /messages/{id}, DELETE /messages/{id} の追加で CRUD 完成
+* バリデーション（入力チェック）
+* Docker 化（PostgreSQL + アプリ一括起動）
+* フロントエンドと連携（CORS設定）
+
+---
 
 ## ライセンス
 
-MIT（任意で変更可）
+MIT License
 
 ---
 
