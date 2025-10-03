@@ -1,5 +1,3 @@
----
-
 # Spring Boot API Demo
 
 簡単な REST API（GET/POST）を Spring Boot 3 で実装したデモです。
@@ -164,5 +162,3 @@ MIT（任意で変更可）
 ### 作者
 
 * 越智 玲仁（Reiji Ochi）
-
----
