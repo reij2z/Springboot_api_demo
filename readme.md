@@ -35,6 +35,7 @@ Next.js フロントエンドからメモを登録・閲覧・更新・削除で
 ```bash
 git clone https://github.com/reij2z/Springboot_api_demo.git
 cd Springboot_api_demo
+```
 
 ### 2. PostgreSQL 設定
 
