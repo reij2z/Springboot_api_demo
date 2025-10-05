@@ -16,14 +16,14 @@ public class NoteController {
 public List<Note> list(@RequestParam(required = false) String q) {
   String qq = (q == null) ? "" : q.trim().toLowerCase();
   return repo.findAll().stream()
-      // タイトル／本文の部分一致（大文字小文字無視、null安全）
+      // タイトル／本文の部分一致
       .filter(n -> {
         if (qq.isEmpty()) return true;
         String t = n.getTitle() == null ? "" : n.getTitle().toLowerCase();
         String c = n.getContent() == null ? "" : n.getContent().toLowerCase();
         return t.contains(qq) || c.contains(qq);
       })
-      // updatedAt 降順（null は最後）
+      // updatedAt 降順
       .sorted((a, b) -> {
         var ua = a.getUpdatedAt();
         var ub = b.getUpdatedAt();

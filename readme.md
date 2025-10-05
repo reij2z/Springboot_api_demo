@@ -8,12 +8,12 @@ Next.js フロントエンドからメモを登録・閲覧・更新・削除で
 
 ## 特長
 
-- Java 17+ / Spring Boot 3.x
-- Spring Data JPA（PostgreSQL 使用）
-- JSON ベースの REST API
-- メモを DB に保存（永続化対応）
-- CORS 設定済み（フロント連携用）
-- Next.js フロントエンドとの連携を想定
+- Java 17+ / Spring Boot 3.x  
+- Spring Data JPA（PostgreSQL 使用）  
+- JSON ベースの REST API  
+- メモを DB に保存（永続化対応）  
+- CORS 設定済み（フロント連携用）  
+- Next.js フロントエンドとの連携を想定  
 
 ---
 
@@ -31,14 +31,14 @@ Next.js フロントエンドからメモを登録・閲覧・更新・削除で
 
 ## セットアップ手順
 
-### 1️ クローン
+### 1. クローン
 
 ```bash
 git clone https://github.com/reij2z/Springboot_api_demo.git
 cd Springboot_api_demo
 ````
 
-### 2️ PostgreSQL 設定
+### 2. PostgreSQL 設定
 
 PostgreSQL に `demo` データベースを作成し、ユーザー情報を設定します。
 
@@ -48,7 +48,7 @@ CREATE USER reiji WITH PASSWORD 'your_password';
 GRANT ALL PRIVILEGES ON DATABASE demo TO reiji;
 ```
 
-`src/main/resources/application.properties` を開いて、以下を確認・設定：
+`src/main/resources/application.properties` に以下を設定：
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/demo
@@ -61,7 +61,7 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 
 ---
 
-### 3️ アプリ起動
+### 3. アプリ起動
 
 #### PowerShell（Windows）
 
@@ -89,7 +89,7 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 GET /notes
 ```
 
-レスポンス例：
+**レスポンス例**
 
 ```json
 [
@@ -106,13 +106,13 @@ GET /notes
 POST /notes
 ```
 
-リクエスト例：
+**リクエスト例**
 
 ```json
 { "content": "新しいメモです" }
 ```
 
-レスポンス：
+**レスポンス**
 
 ```json
 { "id": 3, "content": "新しいメモです" }
@@ -126,13 +126,13 @@ POST /notes
 PUT /notes/{id}
 ```
 
-リクエスト例：
+**リクエスト例**
 
 ```json
 { "content": "内容を更新しました！" }
 ```
 
-レスポンス：
+**レスポンス**
 
 ```json
 { "id": 1, "content": "内容を更新しました！" }
@@ -146,7 +146,7 @@ PUT /notes/{id}
 DELETE /notes/{id}
 ```
 
-レスポンス：
+**レスポンス**
 
 ```json
 { "deleted": true }
@@ -160,7 +160,7 @@ DELETE /notes/{id}
 GET /notes/search?keyword=Spring
 ```
 
-レスポンス：
+**レスポンス**
 
 ```json
 [
@@ -193,10 +193,10 @@ Springboot_api_demo/
 
 ## フロント連携（Next.js）
 
-Next.js で作成したフロントエンド
+Next.js フロントエンド（別リポジトリ）
 [https://github.com/reij2z/Springboot_api_frontend](https://github.com/reij2z/Springboot_api_frontend)
 
-### フロント側で実行できる操作
+**実行できる操作**
 
 * メモ一覧の取得（`GET /notes`）
 * 新規メモ作成（`POST /notes`）
@@ -206,9 +206,9 @@ Next.js で作成したフロントエンド
 
 ---
 
-## データ永続化の確認
+## データ永続化確認
 
-アプリを再起動しても、メモが保持されるか確認：
+アプリを再起動してもメモが保持されることを確認：
 
 ```bash
 "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -U reiji -d demo
@@ -217,7 +217,7 @@ demo=> SELECT * FROM notes;
 
 ---
 
-## よくあるエラー
+## よくあるエラーと対処法
 
 | エラー                                           | 原因             | 対処                          |
 | --------------------------------------------- | -------------- | --------------------------- |
