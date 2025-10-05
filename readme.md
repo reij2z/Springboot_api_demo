@@ -1,4 +1,3 @@
-````md
 # Spring Boot + PostgreSQL メモ帳アプリ（バックエンド）
 
 簡単な **メモ帳 REST API（CRUD）** を **Spring Boot 3 + PostgreSQL** で実装したデモです。  
@@ -36,7 +35,6 @@ Next.js フロントエンドからメモを登録・閲覧・更新・削除で
 ```bash
 git clone https://github.com/reij2z/Springboot_api_demo.git
 cd Springboot_api_demo
-````
 
 ### 2. PostgreSQL 設定
 
@@ -237,7 +235,3 @@ GitHub: [reij2z](https://github.com/reij2z)
 ## ライセンス
 
 MIT License
-
-```
-
----
